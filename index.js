@@ -1,42 +1,49 @@
-import { createUmi } from "https://esm.sh/@metaplex-foundation/umi-bundle-defaults";
-import { mplTokenMetadata, createV1, TokenStandard } from "https://esm.sh/@metaplex-foundation/mpl-token-metadata";
-import { publicKey } from "https://esm.sh/@metaplex-foundation/umi";
+import {
+  Connection,
+  PublicKey,
+  clusterApiUrl
+} from "https://esm.sh/@solana/web3.js";
 
-const MINT = "Hu1p8Yrmu7pUYTfhsiKowieLUUaWX6GyUW4iX8KWhFhJ";
-const URI = "https://helios120.github.io/heliosastro-chls9/assets/token-metadata.json";
+const logBox = document.getElementById("logBox");
+const launchBtn = document.getElementById("launchBtn");
 
-const umi = createUmi("https://api.devnet.solana.com").use(mplTokenMetadata());
+function log(message) {
+  console.log(message);
+  logBox.textContent += `${message}\n`;
+}
 
-async function run() {
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+async function connectPhantom() {
   try {
-    if (!window.solana) {
-      alert("Installe Phantom");
+    log("Début du test...");
+    log("Vérification de Phantom...");
+
+    if (!window.solana || !window.solana.isPhantom) {
+      alert("Phantom non détecté. Vérifie que l’extension Phantom est installée et active.");
+      log("Phantom non détecté.");
       return;
     }
 
-    await window.solana.connect();
-    await umi.useWalletAdapter(window.solana);
+    log("Phantom détecté.");
+    log("Demande de connexion au wallet...");
 
-    console.log("Wallet :", window.solana.publicKey.toString());
+    const response = await window.solana.connect();
+    const walletAddress = response.publicKey.toString();
 
-    const tx = await createV1(umi, {
-      mint: publicKey(MINT),
-      authority: umi.identity,
-      payer: umi.identity,
-      updateAuthority: umi.identity,
-      name: "ChromoHelios CHLS9",
-      symbol: "CHLS9",
-      uri: URI,
-      sellerFeeBasisPoints: 0,
-      tokenStandard: TokenStandard.Fungible
-    }).sendAndConfirm(umi);
+    log(`Wallet connecté : ${walletAddress}`);
 
-    console.log("SUCCESS :", tx);
-    alert("Metadata créée");
-  } catch (e) {
-    console.error(e);
+    const balanceLamports = await connection.getBalance(new PublicKey(walletAddress));
+    const balanceSol = balanceLamports / 1_000_000_000;
+
+    log(`Balance Devnet : ${balanceSol} SOL`);
+
+    alert("Connexion Phantom réussie. Regarde la zone de log sur la page.");
+  } catch (error) {
+    console.error(error);
+    log(`ERREUR : ${error?.message || error}`);
     alert("Erreur console");
   }
 }
 
-document.getElementById("btn").onclick = run;
+launchBtn.addEventListener("click", connectPhantom);
