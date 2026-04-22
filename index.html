@@ -6,6 +6,7 @@
   <title>ChromoHelios CHLS9</title>
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -14,21 +15,32 @@
       color: #ffffff;
       padding: 40px 20px;
     }
+
     .wrap {
-      max-width: 900px;
+      max-width: 980px;
       margin: 0 auto;
     }
+
     h1 {
       margin: 0 0 12px 0;
       font-size: 56px;
       line-height: 1;
       font-weight: 800;
     }
+
     p {
       margin: 0 0 24px 0;
       font-size: 22px;
       color: #d7def0;
     }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
     .btn {
       border: 0;
       border-radius: 14px;
@@ -40,11 +52,18 @@
       color: #1b1b1b;
       box-shadow: 0 8px 30px rgba(0,0,0,.25);
     }
+
+    .btn.secondary {
+      background: #9fc6ff;
+      color: #0e1627;
+    }
+
     .btn:hover {
       opacity: .95;
     }
+
     .panel {
-      margin-top: 28px;
+      margin-top: 8px;
       background: rgba(74, 144, 226, 0.18);
       border: 1px solid rgba(150, 190, 255, 0.18);
       border-radius: 20px;
@@ -53,7 +72,13 @@
       font-family: Consolas, monospace;
       font-size: 18px;
       line-height: 1.5;
-      min-height: 220px;
+      min-height: 260px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      color: #b9c7e5;
+      font-size: 15px;
     }
   </style>
 </head>
@@ -61,8 +86,16 @@
   <div class="wrap">
     <h1>ChromoHelios CHLS9</h1>
     <p>Connexion Phantom + test Solana Devnet</p>
-    <button id="launchBtn" class="btn" type="button">Connecter Phantom</button>
+
+    <div class="actions">
+      <button id="connectBtn" class="btn" type="button">Connecter Phantom</button>
+      <button id="signBtn" class="btn secondary" type="button">Signer le message</button>
+      <button id="sendBtn" class="btn secondary" type="button">Envoyer 0.01 SOL</button>
+      <button id="payBtn" class="btn secondary" type="button">Payer accès 0.05 SOL</button>
+    </div>
+
     <div id="log" class="panel">Page chargée. En attente du clic...</div>
+    <div class="footer-note">Devnet uniquement.</div>
   </div>
 
   <script type="module" src="./index.js"></script>
