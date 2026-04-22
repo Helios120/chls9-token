@@ -4,16 +4,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ChromoHelios CHLS9</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #1b2d5a 0%, #0d1117 45%, #05070b 100%);
+      color: #ffffff;
+      padding: 40px 20px;
+    }
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 12px 0;
+      font-size: 56px;
+      line-height: 1;
+      font-weight: 800;
+    }
+    p {
+      margin: 0 0 24px 0;
+      font-size: 22px;
+      color: #d7def0;
+    }
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 16px 24px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #f3e2c7;
+      color: #1b1b1b;
+      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    }
+    .btn:hover {
+      opacity: .95;
+    }
+    .panel {
+      margin-top: 28px;
+      background: rgba(74, 144, 226, 0.18);
+      border: 1px solid rgba(150, 190, 255, 0.18);
+      border-radius: 20px;
+      padding: 22px;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+      font-size: 18px;
+      line-height: 1.5;
+      min-height: 220px;
+    }
+  </style>
 </head>
-<body style="font-family: Arial, sans-serif; padding: 40px; background: #0b1020; color: white;">
-  <h1>ChromoHelios CHLS9</h1>
-  <p>Connexion Phantom + test Solana Devnet</p>
-
-  <button id="launchBtn" style="padding: 14px 22px; border: 0; border-radius: 10px; cursor: pointer; font-size: 16px;">
-    Connecter Phantom
-  </button>
-
-  <pre id="logBox" style="margin-top: 24px; padding: 16px; background: #11182d; border-radius: 12px; white-space: pre-wrap;"></pre>
+<body>
+  <div class="wrap">
+    <h1>ChromoHelios CHLS9</h1>
+    <p>Connexion Phantom + test Solana Devnet</p>
+    <button id="launchBtn" class="btn">Connecter Phantom</button>
+    <div id="log" class="panel"></div>
+  </div>
 
   <script type="module" src="./index.js"></script>
 </body>
