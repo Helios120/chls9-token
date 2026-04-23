@@ -40,9 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
     logBox.textContent += `\n${message}`;
   }
 
+  function shortenAddress(address) {
+    if (!address || address.length < 12) return address || "-";
+    return `${address.slice(0, 6)}...${address.slice(-6)}`;
+  }
+
   function setMint() {
     mintAddressEl.textContent = MINT_CHLS9;
-    mintShortEl.textContent = `${MINT_CHLS9.slice(0, 6)}...${MINT_CHLS9.slice(-6)}`;
+    mintShortEl.textContent = shortenAddress(MINT_CHLS9);
     networkLabelEl.textContent = RPC_NETWORK;
 
     const explorerUrl = `https://explorer.solana.com/address/${MINT_CHLS9}`;
@@ -61,7 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (address) {
       walletExplorerLinkEl.href = `https://explorer.solana.com/address/${address}`;
+    } else {
+      walletExplorerLinkEl.href = "#";
     }
+  }
+
+  function setStaticMarketData() {
+    tokenNameEl.textContent = "ChromoHelios";
+    tokenSymbolEl.textContent = "CHLS9";
+    tokenVerifiedEl.textContent = "Mainnet actif";
   }
 
   async function getConnection() {
@@ -98,50 +111,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchTokenPrice() {
     try {
+      priceUsdEl.textContent = "$ -";
+      reportPriceEl.textContent = "-";
+
       const url = `https://lite-api.jup.ag/price/v3?ids=${encodeURIComponent(MINT_CHLS9)}`;
       const response = await fetch(url);
-      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(`Réponse API prix ${response.status}`);
+      }
+
+      const data = await response.json();
       const item = data?.[MINT_CHLS9];
       const price = item?.usdPrice ?? null;
 
-      priceUsdEl.textContent = price == null ? "$ -" : `$ ${Number(price).toFixed(6)}`;
-      reportPriceEl.textContent = price == null ? "-" : `$ ${Number(price).toFixed(6)}`;
+      if (price == null) {
+        log("Prix Jupiter non disponible pour CHLS9.");
+        return;
+      }
 
-      log(price == null ? "Prix CHLS9 indisponible" : `Prix CHLS9 : $ ${Number(price).toFixed(6)}`);
+      const formatted = `$ ${Number(price).toFixed(8)}`;
+      priceUsdEl.textContent = formatted;
+      reportPriceEl.textContent = formatted;
+
+      log(`Prix CHLS9 : ${formatted}`);
     } catch (error) {
       console.error(error);
       log(`ERREUR PRIX : ${error?.message || error}`);
-      priceUsdEl.textContent = "$ -";
-      reportPriceEl.textContent = "-";
-    }
-  }
-
-  async function fetchTokenInfo() {
-    try {
-      const url = `https://lite-api.jup.ag/tokens/v2/search?query=${encodeURIComponent(MINT_CHLS9)}`;
-      const response = await fetch(url);
-      const data = await response.json();
-
-      const first = Array.isArray(data) ? data[0] : data?.tokens?.[0] || null;
-
-      tokenNameEl.textContent = first?.name || "ChromoHelios";
-      tokenSymbolEl.textContent = first?.symbol || "CHLS9";
-
-      const verified =
-        first?.verified === true ||
-        first?.strict === true ||
-        first?.audit?.isVerified === true;
-
-      tokenVerifiedEl.textContent = verified ? "Oui" : "Non / inconnu";
-
-      log(`Infos token chargées`);
-    } catch (error) {
-      console.error(error);
-      log(`ERREUR TOKEN INFO : ${error?.message || error}`);
-      tokenNameEl.textContent = "ChromoHelios";
-      tokenSymbolEl.textContent = "CHLS9";
-      tokenVerifiedEl.textContent = "Inconnu";
     }
   }
 
@@ -149,7 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const provider = await connectWallet();
     const connection = await getConnection();
 
-    const tokenProgramId = new solanaWeb3.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+    const tokenProgramId = new solanaWeb3.PublicKey(
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    );
 
     const tokens = await connection.getParsedTokenAccountsByOwner(
       provider.publicKey,
@@ -164,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const mint = info.mint;
       const amount = info.tokenAmount.uiAmount;
 
-      html += `${mint} → ${amount}\n`;
+      html += `${shortenAddress(mint)} → ${amount}\n`;
 
       if (mint === MINT_CHLS9) {
         chlsBalance = amount;
@@ -241,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await refreshWalletAndTokens();
       await fetchTokenPrice();
-      await fetchTokenInfo();
+      setStaticMarketData();
       log("Rafraîchissement complet terminé");
     } catch (error) {
       console.error(error);
@@ -269,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await connectWallet();
       await fetchTokenPrice();
-      await fetchTokenInfo();
+      setStaticMarketData();
       alert("Connexion Phantom validée");
     } catch (error) {
       console.error(error);
@@ -285,5 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setMint();
   setWallet(null, null);
+  setStaticMarketData();
   log("Dashboard CHLS9 mainnet initialisé.");
 });
