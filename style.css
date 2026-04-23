@@ -1,0 +1,50 @@
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0a0f2c,#0d2d5c);
+  color:white;
+}
+
+header{
+  text-align:center;
+  padding:30px;
+}
+
+.logo{
+  width:180px;
+  border-radius:20px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+
+.hero{
+  text-align:center;
+  padding:40px;
+}
+
+button{
+  margin:10px;
+  padding:12px 20px;
+  border:none;
+  border-radius:10px;
+  background:white;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.log{
+  margin:20px auto;
+  width:80%;
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:10px;
+}
+
+.result{
+  margin:20px auto;
+  width:80%;
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:10px;
+}
