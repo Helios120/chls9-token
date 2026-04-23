@@ -1,46 +1,154 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChromoHelios CHLS9 — HeliosAstro</title>
+  <meta name="description" content="ChromoHelios CHLS9 — interface HeliosAstro Pro pour connexion Phantom, test Solana Devnet, paiement et export PDF." />
+  <link rel="stylesheet" href="./style.css" />
 
-<title>ChromoHelios CHLS9</title>
-
-<link rel="stylesheet" href="style.css">
-
-<!-- Solana Web3 -->
-<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-
 <body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
 
-<header>
-  <img src="./assets/chromohelios-logo.png" class="logo">
-  <h1>ChromoHelios CHLS9</h1>
-</header>
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios CHLS9" class="brand-logo" />
+      <div class="brand-text">
+        <div class="brand-kicker">HELIOSASTRO • SOLANA DEVNET</div>
+        <div class="brand-title">ChromoHelios CHLS9</div>
+      </div>
+    </div>
 
-<section class="hero">
+    <nav class="nav">
+      <a href="#token">Token</a>
+      <a href="#actions">Actions</a>
+      <a href="#rapport">Rapport</a>
+    </nav>
+  </header>
 
-  <h2>Connexion Phantom • Paiement • PDF</h2>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">TOKEN • SITE PRO • REVENU</div>
+        <h1>ChromoHelios<br />CHLS9</h1>
+        <p>
+          Interface HeliosAstro complète pour connecter Phantom,
+          signer un message, envoyer une transaction test,
+          encaisser un paiement Devnet et générer un PDF client propre.
+        </p>
 
-  <button onclick="connectWallet()">Connecter Phantom</button>
-  <button onclick="sendSol()">Envoyer 0.01 SOL</button>
-  <button onclick="payAccess()">Payer & Générer PDF</button>
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="#actions">Lancer les actions</a>
+          <a class="btn btn-secondary" href="#rapport">Voir le modèle revenu</a>
+        </div>
 
-</section>
+        <div class="hero-note">
+          DEVNET UNIQUEMENT POUR LES TESTS • MAINNET ENSUITE
+        </div>
+      </div>
 
-<section id="log" class="log"></section>
+      <div class="hero-visual">
+        <div class="visual-card">
+          <img src="./assets/chromohelios-logo.png" alt="Visuel ChromoHelios CHLS9" class="hero-logo" />
+        </div>
+      </div>
+    </section>
 
-<section id="result" class="result">
-  <h2>Rapport HeliosAstro</h2>
-  <p>Analyse énergétique en cours...</p>
-</section>
+    <section id="token" class="panel-grid">
+      <article class="panel">
+        <h2>Token CHLS9</h2>
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="label">Nom</span>
+            <strong>ChromoHelios</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Symbole</span>
+            <strong>CHLS9</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Réseau</span>
+            <strong>Solana Devnet</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Statut</span>
+            <strong>Prototype actif</strong>
+          </div>
+        </div>
+      </article>
 
-<script src="index.js"></script>
+      <article class="panel">
+        <h2>Wallet connecté</h2>
+        <div class="wallet-box">
+          <div><span class="label">Adresse</span><strong id="walletAddress">Non connecté</strong></div>
+          <div><span class="label">Balance</span><strong id="walletBalance">-</strong></div>
+        </div>
+      </article>
+    </section>
 
+    <section id="actions" class="panel">
+      <h2>Actions Web3</h2>
+      <div class="actions">
+        <button id="btnConnect" class="btn btn-light" type="button">Connecter Phantom</button>
+        <button id="btnSign" class="btn btn-light" type="button">Signer le message</button>
+        <button id="btnSend" class="btn btn-light" type="button">Envoyer 0.01 SOL test</button>
+        <button id="btnPay" class="btn btn-light" type="button">Payer 0.05 SOL + PDF</button>
+      </div>
+
+      <div id="log" class="log-panel">Initialisation de l’interface...</div>
+    </section>
+
+    <section id="rapport" class="panel">
+      <h2>Rapport client HeliosAstro</h2>
+
+      <div id="result" class="report">
+        <div class="report-header">
+          <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios" class="report-logo" />
+          <div>
+            <h3>Rapport ChromoHelios CHLS9</h3>
+            <p>Modèle de livrable client — HeliosAstro</p>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-card">
+            <h4>Connexion wallet</h4>
+            <p>Validation d’identité numérique par signature Phantom.</p>
+          </div>
+
+          <div class="report-card">
+            <h4>Paiement</h4>
+            <p>Encaissement d’un paiement Devnet pour simulation du tunnel client.</p>
+          </div>
+
+          <div class="report-card">
+            <h4>Positionnement</h4>
+            <p>Produit Web3 relié à l’univers HeliosAstro, design premium et logique évolutive.</p>
+          </div>
+
+          <div class="report-card">
+            <h4>Projection</h4>
+            <p>Base exploitable pour accès premium, thème astral PDF, dashboard et services tokenisés.</p>
+          </div>
+        </div>
+
+        <div class="report-footer">
+          <strong>Projet :</strong> ChromoHelios CHLS9<br />
+          <strong>Univers :</strong> HeliosAstro<br />
+          <strong>Réseau test :</strong> Solana Devnet
+        </div>
+      </div>
+
+      <div class="pdf-actions">
+        <button id="btnPdf" class="btn btn-secondary" type="button">Générer le PDF</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="./index.js"></script>
 </body>
 </html>
