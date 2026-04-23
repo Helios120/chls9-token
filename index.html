@@ -2,241 +2,204 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChromoHelios CHLS9 — Mainnet Dashboard</title>
-  <meta name="description" content="ChromoHelios CHLS9 — token mainnet Solana avec liquidité active, dashboard investisseur, wallet live et données marché." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChromoHelios CHLS9 — Dashboard</title>
+
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <link rel="stylesheet" href="./style.css" />
-
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios CHLS9" class="brand-logo" />
-      <div class="brand-text">
-        <div class="brand-kicker">CHROMOHELIOS • SOLANA MAINNET</div>
-        <div class="brand-title">CHLS9 Investor Dashboard</div>
-      </div>
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+
+<!-- HEADER -->
+<header class="topbar">
+  <div class="brand">
+    <img src="./assets/chromohelios-logo.png" class="brand-logo"/>
+    <div>
+      <div class="brand-kicker">HELIOSASTRO • SOLANA MAINNET</div>
+      <div class="brand-title">ChromoHelios CHLS9</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a href="#wallet">Wallet</a>
+    <a href="#market">Marché</a>
+    <a href="./buy-sell.html">Buy/Sell</a>
+    <a href="./investisseurs.html">Investisseurs</a>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <h1>ChromoHelios CHLS9</h1>
+  <p>
+    Infrastructure Web3 HeliosAstro connectée à Solana.
+    Accès direct au wallet, suivi du token, et interaction on-chain.
+  </p>
+
+  <button id="btnConnect" class="btn-primary">
+    Connecter Phantom
+  </button>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="panel">
+  <h2>Wallet</h2>
+
+  <div class="grid">
+    <div class="card">
+      <span>Adresse</span>
+      <strong id="walletAddress">-</strong>
+      <a id="walletExplorerLink" target="_blank">Voir Explorer</a>
     </div>
 
-    <nav class="nav">
-      <a href="#token">Token</a>
-      <a href="#actions">Actions</a>
-      <a href="#market">Marché</a>
-      <a href="#rapport">Rapport</a>
-    </nav>
-  </header>
+    <div class="card">
+      <span>SOL</span>
+      <strong id="walletBalance">-</strong>
+    </div>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow">IA VIVANTE • TOKEN MAINNET • ÉCOSYSTÈME HELIOSASTRO</div>
-        <h1>ChromoHelios<br />CHLS9</h1>
-        <p>
-          ChromoHelios CHLS9 est la brique crypto de l’univers HeliosAstro :
-          une identité numérique orientée innovation, visibilité, communauté et déploiement progressif.
-          Le projet s’appuie sur une présence on-chain réelle, une liquidité active et une architecture pensée pour l’évolution.
-        </p>
+    <div class="card">
+      <span>CHLS9</span>
+      <strong id="chlsBalance">0</strong>
+    </div>
 
-        <div class="hero-points">
-          <div class="point">Token mainnet réel</div>
-          <div class="point">Liquidité active</div>
-          <div class="point">Lecture wallet en direct</div>
-          <div class="point">Positionnement premium</div>
-        </div>
+    <div class="card">
+      <span>Réseau</span>
+      <strong id="networkLabel">mainnet</strong>
+    </div>
+  </div>
 
-        <div class="hero-buttons">
-          <a class="btn btn-primary" href="#market">Voir le marché</a>
-          <a class="btn btn-secondary" id="mintExplorerBtn" href="#" target="_blank" rel="noopener noreferrer">Voir le mint</a>
-        </div>
+  <div class="actions">
+    <button id="btnRefresh">Refresh</button>
+    <button id="btnSign">Signer</button>
+    <button id="btnSend">Tx test</button>
+  </div>
 
-        <div class="hero-note">
-          Communication destinée à l’information du projet. Elle ne constitue pas une promesse de rendement.
-        </div>
-      </div>
+</section>
 
-      <div class="hero-visual">
-        <div class="visual-card">
-          <img src="./assets/chromohelios-logo.png" alt="Visuel ChromoHelios CHLS9" class="hero-logo" />
-        </div>
-      </div>
-    </section>
+<!-- TOKEN -->
+<section class="panel">
+  <h2>Token CHLS9</h2>
 
-    <section id="token" class="panel-grid">
-      <article class="panel">
-        <h2>Fiche Token</h2>
-        <div class="stats-grid">
-          <div class="stat">
-            <span class="label">Nom</span>
-            <strong>ChromoHelios</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Symbole</span>
-            <strong>CHLS9</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Réseau</span>
-            <strong>Mainnet Beta</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Mint</span>
-            <strong id="mintShort">EffrWV...AGYd6</strong>
-          </div>
-        </div>
+  <div class="grid">
 
-        <div class="mint-box">
-          <p class="label">Adresse du mint</p>
-          <code id="mintAddress">EffrWV33cwDhHNbDJ7T7TH5AsfxuXjB7wACHgM6JAGYd6</code>
-          <button id="copyMintBtn" class="copy-btn" type="button">Copier l’adresse</button>
-        </div>
-      </article>
+    <div class="card">
+      <span>Nom</span>
+      <strong id="tokenName">ChromoHelios</strong>
+    </div>
 
-      <article class="panel">
-        <h2>Wallet connecté</h2>
-        <div class="wallet-box">
-          <div>
-            <span class="label">Adresse</span>
-            <strong id="walletAddress">Non connecté</strong>
-          </div>
-          <div>
-            <span class="label">SOL</span>
-            <strong id="walletBalance">-</strong>
-          </div>
-          <div>
-            <span class="label">CHLS9</span>
-            <strong id="chlsBalance">-</strong>
-          </div>
-        </div>
-      </article>
-    </section>
+    <div class="card">
+      <span>Symbole</span>
+      <strong id="tokenSymbol">CHLS9</strong>
+    </div>
 
-    <section id="actions" class="panel">
-      <h2>Actions Wallet</h2>
-      <div class="actions">
-        <button id="btnConnect" class="btn btn-light" type="button">Connecter Phantom</button>
-        <button id="btnRefresh" class="btn btn-light" type="button">Rafraîchir</button>
-        <button id="btnSign" class="btn btn-light" type="button">Signer un message</button>
-        <button id="btnSend" class="btn btn-light" type="button">Envoyer 0.01 SOL test</button>
-        <button id="btnPdf" class="btn btn-secondary" type="button">Exporter PDF</button>
-      </div>
+    <div class="card">
+      <span>Statut</span>
+      <strong id="tokenVerified">Mainnet actif</strong>
+    </div>
 
-      <div id="log" class="log-panel">Initialisation de l’interface...</div>
-    </section>
+    <div class="card">
+      <span>Mint</span>
+      <strong id="mintShort">...</strong>
+      <button id="copyMintBtn">Copier</button>
+    </div>
 
-    <section id="market" class="panel-grid market-grid">
-      <article class="panel">
-        <h2>Marché</h2>
-        <div class="stats-grid market-stats">
-          <div class="stat">
-            <span class="label">Prix estimé USD</span>
-            <strong id="priceUsd">$ -</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Nom API</span>
-            <strong id="tokenName">-</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Symbole API</span>
-            <strong id="tokenSymbol">-</strong>
-          </div>
-          <div class="stat">
-            <span class="label">Statut</span>
-            <strong id="tokenVerified">-</strong>
-          </div>
-        </div>
-      </article>
+  </div>
 
-      <article class="panel">
-        <h2>Liens Projet</h2>
-        <div class="links-grid">
-          <a class="link-card" id="mintExplorerLink" href="#" target="_blank" rel="noopener noreferrer">
-            <span class="label">Explorer</span>
-            <strong>Voir le mint sur Solana Explorer</strong>
-          </a>
+  <div class="mint-full">
+    <code id="mintAddress"></code>
+  </div>
 
-          <a class="link-card" id="walletExplorerLink" href="#" target="_blank" rel="noopener noreferrer">
-            <span class="label">Explorer</span>
-            <strong>Voir le wallet connecté</strong>
-          </a>
+  <div class="links">
+    <a id="mintExplorerBtn" target="_blank">Explorer</a>
+    <a href="https://raydium.io/swap/" target="_blank">Raydium Swap</a>
+  </div>
 
-          <a class="link-card" href="https://raydium.io/liquidity/" target="_blank" rel="noopener noreferrer">
-            <span class="label">Raydium</span>
-            <strong>Accéder à la zone liquidité</strong>
-          </a>
+</section>
 
-          <a class="link-card" href="https://raydium.io/swap/" target="_blank" rel="noopener noreferrer">
-            <span class="label">Raydium</span>
-            <strong>Ouvrir le swap</strong>
-          </a>
-        </div>
-      </article>
-    </section>
+<!-- MARKET -->
+<section id="market" class="panel">
+  <h2>Marché</h2>
 
-    <section class="panel">
-      <h2>Tokens détectés dans le wallet</h2>
-      <div id="tokensList" class="tokens-list">-</div>
-    </section>
+  <div class="grid">
 
-    <section id="rapport" class="panel">
-      <h2>Argumentaire Projet</h2>
+    <div class="card">
+      <span>Prix USD</span>
+      <strong id="priceUsd">$ -</strong>
+    </div>
 
-      <div id="report" class="report">
-        <div class="report-header">
-          <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios" class="report-logo" />
-          <div>
-            <h3>ChromoHelios CHLS9</h3>
-            <p>Actif numérique orienté écosystème, visibilité et déploiement progressif.</p>
-          </div>
-        </div>
+    <div class="card">
+      <span>Nom API</span>
+      <strong id="tokenName">ChromoHelios</strong>
+    </div>
 
-        <div class="report-grid">
-          <div class="report-card">
-            <h4>Positionnement</h4>
-            <p>
-              CHLS9 se positionne comme la couche token d’un univers de marque à forte identité visuelle,
-              conçu pour articuler communauté, narration et utilité numérique.
-            </p>
-          </div>
+    <div class="card">
+      <span>Symbole API</span>
+      <strong id="tokenSymbol">CHLS9</strong>
+    </div>
 
-          <div class="report-card">
-            <h4>Thèse projet</h4>
-            <p>
-              L’ambition n’est pas de proposer un token vide, mais un actif attaché à un récit, un design
-              distinctif et une logique d’écosystème orientée long terme.
-            </p>
-          </div>
+    <div class="card">
+      <span>Statut</span>
+      <strong id="tokenVerified">Actif</strong>
+    </div>
 
-          <div class="report-card">
-            <h4>Lecture investisseur</h4>
-            <p>
-              Un projet lisible inspire davantage confiance qu’un lancement opaque.
-              CHLS9 mise sur la cohérence visuelle, la traçabilité on-chain et une présence marché structurée.
-            </p>
-          </div>
+  </div>
+</section>
 
-          <div class="report-card">
-            <h4>Vision</h4>
-            <p>
-              L’objectif est de faire converger identité de marque, liquidité, visibilité et expérience utilisateur
-              autour d’un actif numérique capable d’évoluer avec l’écosystème HeliosAstro.
-            </p>
-          </div>
-        </div>
+<!-- TOKENS LIST -->
+<section class="panel">
+  <h2>Tokens détectés</h2>
+  <pre id="tokensList">-</pre>
+</section>
 
-        <div class="report-footer">
-          <strong>Mint :</strong> EffrWV33cwDhHNbDJ7T7TH5AsfxuXjB7wACHgM6JAGYd6<br />
-          <strong>Réseau :</strong> Solana Mainnet Beta<br />
-          <strong>Projet :</strong> ChromoHelios CHLS9
-        </div>
-      </div>
-    </section>
-  </main>
+<!-- LOG -->
+<section class="panel">
+  <h2>Console</h2>
+  <pre id="log"></pre>
+</section>
 
-  <script src="./index.js"></script>
+<!-- REPORT -->
+<section id="report" class="panel">
+  <h2>Rapport investisseur</h2>
+
+  <div class="grid">
+    <div class="card">
+      <span>Wallet</span>
+      <strong id="reportWallet">-</strong>
+    </div>
+
+    <div class="card">
+      <span>SOL</span>
+      <strong id="reportSol">-</strong>
+    </div>
+
+    <div class="card">
+      <span>CHLS9</span>
+      <strong id="reportChls">-</strong>
+    </div>
+
+    <div class="card">
+      <span>Prix</span>
+      <strong id="reportPrice">-</strong>
+    </div>
+  </div>
+
+  <button id="btnPdf">Exporter PDF</button>
+</section>
+
+</main>
+
+<!-- SCRIPT -->
+<script src="./index.js"></script>
+
 </body>
 </html>
