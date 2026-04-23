@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChromoHelios CHLS9 — HeliosAstro</title>
-  <meta name="description" content="ChromoHelios CHLS9 — interface HeliosAstro Pro pour connexion Phantom, test Solana Devnet, paiement et export PDF." />
+  <title>ChromoHelios CHLS9 — Mainnet Dashboard</title>
+  <meta name="description" content="ChromoHelios CHLS9 — token mainnet Solana avec liquidité active, dashboard investisseur, wallet live et données marché." />
+
   <link rel="stylesheet" href="./style.css" />
 
   <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
@@ -18,14 +19,15 @@
     <div class="brand">
       <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios CHLS9" class="brand-logo" />
       <div class="brand-text">
-        <div class="brand-kicker">HELIOSASTRO • SOLANA DEVNET</div>
-        <div class="brand-title">ChromoHelios CHLS9</div>
+        <div class="brand-kicker">CHROMOHELIOS • SOLANA MAINNET</div>
+        <div class="brand-title">CHLS9 Investor Dashboard</div>
       </div>
     </div>
 
     <nav class="nav">
       <a href="#token">Token</a>
       <a href="#actions">Actions</a>
+      <a href="#market">Marché</a>
       <a href="#rapport">Rapport</a>
     </nav>
   </header>
@@ -33,21 +35,28 @@
   <main class="container">
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">TOKEN • SITE PRO • REVENU</div>
+        <div class="eyebrow">IA VIVANTE • TOKEN MAINNET • ÉCOSYSTÈME HELIOSASTRO</div>
         <h1>ChromoHelios<br />CHLS9</h1>
         <p>
-          Interface HeliosAstro complète pour connecter Phantom,
-          signer un message, envoyer une transaction test,
-          encaisser un paiement Devnet et générer un PDF client propre.
+          ChromoHelios CHLS9 est la brique crypto de l’univers HeliosAstro :
+          une identité numérique orientée innovation, visibilité, communauté et déploiement progressif.
+          Le projet s’appuie sur une présence on-chain réelle, une liquidité active et une architecture pensée pour l’évolution.
         </p>
 
+        <div class="hero-points">
+          <div class="point">Token mainnet réel</div>
+          <div class="point">Liquidité active</div>
+          <div class="point">Lecture wallet en direct</div>
+          <div class="point">Positionnement premium</div>
+        </div>
+
         <div class="hero-buttons">
-          <a class="btn btn-primary" href="#actions">Lancer les actions</a>
-          <a class="btn btn-secondary" href="#rapport">Voir le modèle revenu</a>
+          <a class="btn btn-primary" href="#market">Voir le marché</a>
+          <a class="btn btn-secondary" id="mintExplorerBtn" href="#" target="_blank" rel="noopener noreferrer">Voir le mint</a>
         </div>
 
         <div class="hero-note">
-          DEVNET UNIQUEMENT POUR LES TESTS • MAINNET ENSUITE
+          Communication destinée à l’information du projet. Elle ne constitue pas une promesse de rendement.
         </div>
       </div>
 
@@ -60,7 +69,7 @@
 
     <section id="token" class="panel-grid">
       <article class="panel">
-        <h2>Token CHLS9</h2>
+        <h2>Fiche Token</h2>
         <div class="stats-grid">
           <div class="stat">
             <span class="label">Nom</span>
@@ -72,79 +81,158 @@
           </div>
           <div class="stat">
             <span class="label">Réseau</span>
-            <strong>Solana Devnet</strong>
+            <strong>Mainnet Beta</strong>
           </div>
           <div class="stat">
-            <span class="label">Statut</span>
-            <strong>Prototype actif</strong>
+            <span class="label">Mint</span>
+            <strong id="mintShort">EffrWV...AGYd6</strong>
           </div>
+        </div>
+
+        <div class="mint-box">
+          <p class="label">Adresse du mint</p>
+          <code id="mintAddress">EffrWV33cwDhHNbDJ7T7TH5AsfxuXjB7wACHgM6JAGYd6</code>
+          <button id="copyMintBtn" class="copy-btn" type="button">Copier l’adresse</button>
         </div>
       </article>
 
       <article class="panel">
         <h2>Wallet connecté</h2>
         <div class="wallet-box">
-          <div><span class="label">Adresse</span><strong id="walletAddress">Non connecté</strong></div>
-          <div><span class="label">Balance</span><strong id="walletBalance">-</strong></div>
+          <div>
+            <span class="label">Adresse</span>
+            <strong id="walletAddress">Non connecté</strong>
+          </div>
+          <div>
+            <span class="label">SOL</span>
+            <strong id="walletBalance">-</strong>
+          </div>
+          <div>
+            <span class="label">CHLS9</span>
+            <strong id="chlsBalance">-</strong>
+          </div>
         </div>
       </article>
     </section>
 
     <section id="actions" class="panel">
-      <h2>Actions Web3</h2>
+      <h2>Actions Wallet</h2>
       <div class="actions">
         <button id="btnConnect" class="btn btn-light" type="button">Connecter Phantom</button>
-        <button id="btnSign" class="btn btn-light" type="button">Signer le message</button>
+        <button id="btnRefresh" class="btn btn-light" type="button">Rafraîchir</button>
+        <button id="btnSign" class="btn btn-light" type="button">Signer un message</button>
         <button id="btnSend" class="btn btn-light" type="button">Envoyer 0.01 SOL test</button>
-        <button id="btnPay" class="btn btn-light" type="button">Payer 0.05 SOL + PDF</button>
+        <button id="btnPdf" class="btn btn-secondary" type="button">Exporter PDF</button>
       </div>
 
       <div id="log" class="log-panel">Initialisation de l’interface...</div>
     </section>
 
-    <section id="rapport" class="panel">
-      <h2>Rapport client HeliosAstro</h2>
+    <section id="market" class="panel-grid market-grid">
+      <article class="panel">
+        <h2>Marché</h2>
+        <div class="stats-grid market-stats">
+          <div class="stat">
+            <span class="label">Prix estimé USD</span>
+            <strong id="priceUsd">$ -</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Nom API</span>
+            <strong id="tokenName">-</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Symbole API</span>
+            <strong id="tokenSymbol">-</strong>
+          </div>
+          <div class="stat">
+            <span class="label">Statut</span>
+            <strong id="tokenVerified">-</strong>
+          </div>
+        </div>
+      </article>
 
-      <div id="result" class="report">
+      <article class="panel">
+        <h2>Liens Projet</h2>
+        <div class="links-grid">
+          <a class="link-card" id="mintExplorerLink" href="#" target="_blank" rel="noopener noreferrer">
+            <span class="label">Explorer</span>
+            <strong>Voir le mint sur Solana Explorer</strong>
+          </a>
+
+          <a class="link-card" id="walletExplorerLink" href="#" target="_blank" rel="noopener noreferrer">
+            <span class="label">Explorer</span>
+            <strong>Voir le wallet connecté</strong>
+          </a>
+
+          <a class="link-card" href="https://raydium.io/liquidity/" target="_blank" rel="noopener noreferrer">
+            <span class="label">Raydium</span>
+            <strong>Accéder à la zone liquidité</strong>
+          </a>
+
+          <a class="link-card" href="https://raydium.io/swap/" target="_blank" rel="noopener noreferrer">
+            <span class="label">Raydium</span>
+            <strong>Ouvrir le swap</strong>
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Tokens détectés dans le wallet</h2>
+      <div id="tokensList" class="tokens-list">-</div>
+    </section>
+
+    <section id="rapport" class="panel">
+      <h2>Argumentaire Projet</h2>
+
+      <div id="report" class="report">
         <div class="report-header">
           <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios" class="report-logo" />
           <div>
-            <h3>Rapport ChromoHelios CHLS9</h3>
-            <p>Modèle de livrable client — HeliosAstro</p>
+            <h3>ChromoHelios CHLS9</h3>
+            <p>Actif numérique orienté écosystème, visibilité et déploiement progressif.</p>
           </div>
         </div>
 
         <div class="report-grid">
           <div class="report-card">
-            <h4>Connexion wallet</h4>
-            <p>Validation d’identité numérique par signature Phantom.</p>
-          </div>
-
-          <div class="report-card">
-            <h4>Paiement</h4>
-            <p>Encaissement d’un paiement Devnet pour simulation du tunnel client.</p>
-          </div>
-
-          <div class="report-card">
             <h4>Positionnement</h4>
-            <p>Produit Web3 relié à l’univers HeliosAstro, design premium et logique évolutive.</p>
+            <p>
+              CHLS9 se positionne comme la couche token d’un univers de marque à forte identité visuelle,
+              conçu pour articuler communauté, narration et utilité numérique.
+            </p>
           </div>
 
           <div class="report-card">
-            <h4>Projection</h4>
-            <p>Base exploitable pour accès premium, thème astral PDF, dashboard et services tokenisés.</p>
+            <h4>Thèse projet</h4>
+            <p>
+              L’ambition n’est pas de proposer un token vide, mais un actif attaché à un récit, un design
+              distinctif et une logique d’écosystème orientée long terme.
+            </p>
+          </div>
+
+          <div class="report-card">
+            <h4>Lecture investisseur</h4>
+            <p>
+              Un projet lisible inspire davantage confiance qu’un lancement opaque.
+              CHLS9 mise sur la cohérence visuelle, la traçabilité on-chain et une présence marché structurée.
+            </p>
+          </div>
+
+          <div class="report-card">
+            <h4>Vision</h4>
+            <p>
+              L’objectif est de faire converger identité de marque, liquidité, visibilité et expérience utilisateur
+              autour d’un actif numérique capable d’évoluer avec l’écosystème HeliosAstro.
+            </p>
           </div>
         </div>
 
         <div class="report-footer">
-          <strong>Projet :</strong> ChromoHelios CHLS9<br />
-          <strong>Univers :</strong> HeliosAstro<br />
-          <strong>Réseau test :</strong> Solana Devnet
+          <strong>Mint :</strong> EffrWV33cwDhHNbDJ7T7TH5AsfxuXjB7wACHgM6JAGYd6<br />
+          <strong>Réseau :</strong> Solana Mainnet Beta<br />
+          <strong>Projet :</strong> ChromoHelios CHLS9
         </div>
-      </div>
-
-      <div class="pdf-actions">
-        <button id="btnPdf" class="btn btn-secondary" type="button">Générer le PDF</button>
       </div>
     </section>
   </main>
