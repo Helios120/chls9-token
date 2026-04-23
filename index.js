@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentBalance = null;
 
   function log(message) {
+    if (!logBox) return;
     logBox.textContent += `\n${message}`;
   }
 
@@ -45,36 +46,47 @@ document.addEventListener("DOMContentLoaded", () => {
     return `${address.slice(0, 6)}...${address.slice(-6)}`;
   }
 
+  function syncDuplicates() {
+    const priceUsdDuplicate = document.getElementById("priceUsdDuplicate");
+    const tokenNameDuplicate = document.getElementById("tokenNameDuplicate");
+    const tokenSymbolDuplicate = document.getElementById("tokenSymbolDuplicate");
+    const tokenVerifiedDuplicate = document.getElementById("tokenVerifiedDuplicate");
+
+    if (priceUsdDuplicate && priceUsdEl) priceUsdDuplicate.textContent = priceUsdEl.textContent;
+    if (tokenNameDuplicate && tokenNameEl) tokenNameDuplicate.textContent = tokenNameEl.textContent;
+    if (tokenSymbolDuplicate && tokenSymbolEl) tokenSymbolDuplicate.textContent = tokenSymbolEl.textContent;
+    if (tokenVerifiedDuplicate && tokenVerifiedEl) tokenVerifiedDuplicate.textContent = tokenVerifiedEl.textContent;
+  }
+
   function setMint() {
-    mintAddressEl.textContent = MINT_CHLS9;
-    mintShortEl.textContent = shortenAddress(MINT_CHLS9);
-    networkLabelEl.textContent = RPC_NETWORK;
+    if (mintAddressEl) mintAddressEl.textContent = MINT_CHLS9;
+    if (mintShortEl) mintShortEl.textContent = shortenAddress(MINT_CHLS9);
+    if (networkLabelEl) networkLabelEl.textContent = RPC_NETWORK;
 
     const explorerUrl = `https://explorer.solana.com/address/${MINT_CHLS9}`;
-    mintExplorerLinkEl.href = explorerUrl;
-    mintExplorerBtnEl.href = explorerUrl;
+    if (mintExplorerLinkEl) mintExplorerLinkEl.href = explorerUrl;
+    if (mintExplorerBtnEl) mintExplorerBtnEl.href = explorerUrl;
   }
 
   function setWallet(address, sol) {
-    walletAddressEl.textContent = address || "Non connecté";
-    walletBalanceEl.textContent = sol == null ? "-" : `${sol} SOL`;
-    miniAddressEl.textContent = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Non connecté";
-    miniSolEl.textContent = sol == null ? "- SOL" : `${sol} SOL`;
+    if (walletAddressEl) walletAddressEl.textContent = address || "Non connecté";
+    if (walletBalanceEl) walletBalanceEl.textContent = sol == null ? "-" : `${sol} SOL`;
+    if (miniAddressEl) miniAddressEl.textContent = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Non connecté";
+    if (miniSolEl) miniSolEl.textContent = sol == null ? "- SOL" : `${sol} SOL`;
 
-    reportWalletEl.textContent = address || "-";
-    reportSolEl.textContent = sol == null ? "-" : `${sol} SOL`;
+    if (reportWalletEl) reportWalletEl.textContent = address || "-";
+    if (reportSolEl) reportSolEl.textContent = sol == null ? "-" : `${sol} SOL`;
 
-    if (address) {
-      walletExplorerLinkEl.href = `https://explorer.solana.com/address/${address}`;
-    } else {
-      walletExplorerLinkEl.href = "#";
+    if (walletExplorerLinkEl) {
+      walletExplorerLinkEl.href = address ? `https://explorer.solana.com/address/${address}` : "#";
     }
   }
 
   function setStaticMarketData() {
-    tokenNameEl.textContent = "ChromoHelios";
-    tokenSymbolEl.textContent = "CHLS9";
-    tokenVerifiedEl.textContent = "Mainnet actif";
+    if (tokenNameEl) tokenNameEl.textContent = "ChromoHelios";
+    if (tokenSymbolEl) tokenSymbolEl.textContent = "CHLS9";
+    if (tokenVerifiedEl) tokenVerifiedEl.textContent = "Mainnet actif";
+    syncDuplicates();
   }
 
   async function getConnection() {
@@ -111,8 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function fetchTokenPrice() {
     try {
-      priceUsdEl.textContent = "$ -";
-      reportPriceEl.textContent = "-";
+      if (priceUsdEl) priceUsdEl.textContent = "$ -";
+      if (reportPriceEl) reportPriceEl.textContent = "-";
+      syncDuplicates();
 
       const url = `https://lite-api.jup.ag/price/v3?ids=${encodeURIComponent(MINT_CHLS9)}`;
       const response = await fetch(url);
@@ -131,9 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const formatted = `$ ${Number(price).toFixed(8)}`;
-      priceUsdEl.textContent = formatted;
-      reportPriceEl.textContent = formatted;
+      if (priceUsdEl) priceUsdEl.textContent = formatted;
+      if (reportPriceEl) reportPriceEl.textContent = formatted;
 
+      syncDuplicates();
       log(`Prix CHLS9 : ${formatted}`);
     } catch (error) {
       console.error(error);
@@ -169,9 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    tokensListEl.textContent = html || "Aucun token détecté";
-    chlsBalanceEl.textContent = chlsBalance;
-    reportChlsEl.textContent = chlsBalance;
+    if (tokensListEl) tokensListEl.textContent = html || "Aucun token détecté";
+    if (chlsBalanceEl) chlsBalanceEl.textContent = chlsBalance;
+    if (reportChlsEl) reportChlsEl.textContent = chlsBalance;
 
     log("Liste des tokens rafraîchie");
   }
@@ -223,6 +237,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function exportPdf() {
+    const report = document.getElementById("report");
+    if (!report) return;
+
     html2pdf()
       .set({
         margin: 10,
@@ -231,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         html2canvas: { scale: 2 },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
       })
-      .from(document.getElementById("report"))
+      .from(report)
       .save();
   }
 
@@ -248,38 +265,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  copyMintBtn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(MINT_CHLS9);
-      copyMintBtn.textContent = "Adresse copiée";
-      setTimeout(() => {
-        copyMintBtn.textContent = "Copier l’adresse";
-      }, 1600);
-    } catch (error) {
-      copyMintBtn.textContent = "Erreur";
-      setTimeout(() => {
-        copyMintBtn.textContent = "Copier l’adresse";
-      }, 1600);
-    }
-  });
+  if (copyMintBtn) {
+    copyMintBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(MINT_CHLS9);
+        copyMintBtn.textContent = "Adresse copiée";
+        setTimeout(() => {
+          copyMintBtn.textContent = "Copier l’adresse";
+        }, 1600);
+      } catch (error) {
+        copyMintBtn.textContent = "Erreur";
+        setTimeout(() => {
+          copyMintBtn.textContent = "Copier l’adresse";
+        }, 1600);
+      }
+    });
+  }
 
-  btnConnect.addEventListener("click", async () => {
-    try {
-      await connectWallet();
-      await fetchTokenPrice();
-      setStaticMarketData();
-      alert("Connexion Phantom validée");
-    } catch (error) {
-      console.error(error);
-      log(`ERREUR CONNEXION : ${error?.message || error}`);
-      alert("Erreur console");
-    }
-  });
+  if (btnConnect) {
+    btnConnect.addEventListener("click", async () => {
+      try {
+        await connectWallet();
+        await fetchTokenPrice();
+        setStaticMarketData();
+        alert("Connexion Phantom validée");
+      } catch (error) {
+        console.error(error);
+        log(`ERREUR CONNEXION : ${error?.message || error}`);
+        alert("Erreur console");
+      }
+    });
+  }
 
-  btnRefresh.addEventListener("click", refreshAll);
-  btnSign.addEventListener("click", signMessage);
-  btnSend.addEventListener("click", sendTestSol);
-  btnPdf.addEventListener("click", exportPdf);
+  if (btnRefresh) btnRefresh.addEventListener("click", refreshAll);
+  if (btnSign) btnSign.addEventListener("click", signMessage);
+  if (btnSend) btnSend.addEventListener("click", sendTestSol);
+  if (btnPdf) btnPdf.addEventListener("click", exportPdf);
 
   setMint();
   setWallet(null, null);
