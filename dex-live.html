@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHLS9 DEX Live — ChromoHelios</title>
+  <meta name="description" content="Dashboard live CHLS9 : wallet Phantom, SOL, prix token, solde token, infos Jupiter, export PDF." />
+  <link rel="stylesheet" href="./dex-live.css" />
+
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div class="bg bg-1"></div>
+  <div class="bg bg-2"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios CHLS9" class="logo" />
+      <div>
+        <div class="kicker">CHROMOHELIOS • DEX LIVE</div>
+        <div class="title">CHLS9 Dashboard</div>
+      </div>
+    </div>
+
+    <div class="mini-wallet">
+      <div id="miniAddress">Non connecté</div>
+      <div id="miniSol">- SOL</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">WALLET • PRIX • TOKENS • EXPLORER</div>
+        <h1>CHLS9<br />DEX Live</h1>
+        <p>
+          Lecture live du wallet Phantom, du SOL, du solde CHLS9,
+          du prix token et des infos Jupiter, sans casser ton site principal.
+        </p>
+
+        <div class="actions">
+          <button id="btnConnect" class="btn primary" type="button">Connecter Phantom</button>
+          <button id="btnRefresh" class="btn" type="button">Rafraîchir</button>
+          <button id="btnSign" class="btn" type="button">Signer</button>
+          <button id="btnSend" class="btn" type="button">Envoyer 0.01 SOL test</button>
+          <button id="btnPdf" class="btn secondary" type="button">Exporter PDF</button>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <img src="./assets/chromohelios-logo.png" alt="Visuel ChromoHelios" class="hero-logo" />
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Wallet</h2>
+        <div class="kv"><span>Adresse</span><strong id="walletAddress">-</strong></div>
+        <div class="kv"><span>SOL</span><strong id="walletSol">-</strong></div>
+        <div class="kv"><span>Réseau</span><strong id="networkLabel">mainnet-beta</strong></div>
+      </article>
+
+      <article class="card">
+        <h2>CHLS9</h2>
+        <div class="kv"><span>Mint</span><strong id="mintAddress">-</strong></div>
+        <div class="kv"><span>Solde</span><strong id="chlsBalance">0</strong></div>
+        <div class="kv"><span>Prix estimé USD</span><strong id="chlsPrice">$ -</strong></div>
+      </article>
+
+      <article class="card">
+        <h2>Jupiter Token Info</h2>
+        <div class="kv"><span>Nom</span><strong id="tokenName">-</strong></div>
+        <div class="kv"><span>Symbole</span><strong id="tokenSymbol">-</strong></div>
+        <div class="kv"><span>Vérification</span><strong id="tokenVerified">-</strong></div>
+      </article>
+
+      <article class="card">
+        <h2>Explorer</h2>
+        <div class="links">
+          <a id="mintExplorerLink" href="#" target="_blank" rel="noopener noreferrer">Voir le mint</a>
+          <a id="walletExplorerLink" href="#" target="_blank" rel="noopener noreferrer">Voir le wallet</a>
+        </div>
+      </article>
+
+      <article class="card wide">
+        <h2>Tokens détectés</h2>
+        <div id="tokensList" class="tokens-list">-</div>
+      </article>
+
+      <article class="card wide">
+        <h2>Logs</h2>
+        <pre id="log" class="log"></pre>
+      </article>
+    </section>
+
+    <section id="report" class="report">
+      <div class="report-header">
+        <img src="./assets/chromohelios-logo.png" alt="Logo ChromoHelios" class="report-logo" />
+        <div>
+          <h3>Rapport CHLS9 DEX Live</h3>
+          <p>État du wallet, prix token, solde CHLS9 et lecture live Jupiter.</p>
+        </div>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-card">
+          <h4>Wallet</h4>
+          <p id="reportWallet">-</p>
+        </div>
+        <div class="report-card">
+          <h4>SOL</h4>
+          <p id="reportSol">-</p>
+        </div>
+        <div class="report-card">
+          <h4>CHLS9</h4>
+          <p id="reportChls">-</p>
+        </div>
+        <div class="report-card">
+          <h4>Prix USD</h4>
+          <p id="reportPrice">-</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./dex-live.js"></script>
+</body>
+</html>
