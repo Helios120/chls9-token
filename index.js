@@ -1,89 +1,187 @@
-const log = document.getElementById("log");
+document.addEventListener("DOMContentLoaded", () => {
+  const logBox = document.getElementById("log");
+  const walletAddressEl = document.getElementById("walletAddress");
+  const walletBalanceEl = document.getElementById("walletBalance");
 
-function write(msg){
-  log.innerHTML += msg + "<br>";
-}
+  const btnConnect = document.getElementById("btnConnect");
+  const btnSign = document.getElementById("btnSign");
+  const btnSend = document.getElementById("btnSend");
+  const btnPay = document.getElementById("btnPay");
+  const btnPdf = document.getElementById("btnPdf");
 
-// Connexion wallet
-async function connectWallet(){
-  const provider = window.solana;
+  let currentWallet = null;
+  let currentBalance = null;
 
-  if(!provider || !provider.isPhantom){
-    alert("Phantom non installé");
-    return;
+  function log(message) {
+    logBox.textContent += `\n${message}`;
   }
 
-  const res = await provider.connect();
-  write("Wallet connecté : " + res.publicKey.toString());
-}
+  function setWalletInfo(address, balance) {
+    walletAddressEl.textContent = address || "Non connecté";
+    walletBalanceEl.textContent = balance == null ? "-" : `${balance} SOL`;
+  }
 
-// Envoi SOL
-async function sendSol(){
-  const provider = window.solana;
-  await provider.connect();
+  async function getConnection() {
+    return new solanaWeb3.Connection(
+      solanaWeb3.clusterApiUrl("devnet"),
+      "confirmed"
+    );
+  }
 
-  const connection = new solanaWeb3.Connection(
-    solanaWeb3.clusterApiUrl("devnet"),
-    "confirmed"
-  );
+  async function requirePhantom() {
+    if (!window.solana || !window.solana.isPhantom) {
+      throw new Error("Phantom non détecté");
+    }
+    return window.solana;
+  }
 
-  const tx = new solanaWeb3.Transaction().add(
-    solanaWeb3.SystemProgram.transfer({
-      fromPubkey: provider.publicKey,
-      toPubkey: provider.publicKey,
-      lamports: 10000000
-    })
-  );
+  async function connectWallet() {
+    const provider = await requirePhantom();
 
-  tx.feePayer = provider.publicKey;
-  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    log("Connexion au wallet...");
+    const response = await provider.connect();
+    currentWallet = response.publicKey.toString();
 
-  const signed = await provider.signTransaction(tx);
-  const sig = await connection.sendRawTransaction(signed.serialize());
+    const connection = await getConnection();
+    const lamports = await connection.getBalance(response.publicKey);
+    currentBalance = lamports / 1_000_000_000;
 
-  await connection.confirmTransaction(sig);
+    setWalletInfo(currentWallet, currentBalance);
 
-  write("Transaction OK : " + sig);
-}
+    log(`Wallet connecté : ${currentWallet}`);
+    log(`Balance Devnet : ${currentBalance} SOL`);
 
-// Paiement + PDF
-async function payAccess(){
-  const provider = window.solana;
-  await provider.connect();
+    return provider;
+  }
 
-  const connection = new solanaWeb3.Connection(
-    solanaWeb3.clusterApiUrl("devnet"),
-    "confirmed"
-  );
+  async function signMessage() {
+    try {
+      const provider = await connectWallet();
 
-  const receiver = new solanaWeb3.PublicKey(provider.publicKey);
+      log("Demande de signature...");
+      const message = new TextEncoder().encode("Validation ChromoHelios CHLS9");
+      await provider.signMessage(message, "utf8");
 
-  const tx = new solanaWeb3.Transaction().add(
-    solanaWeb3.SystemProgram.transfer({
-      fromPubkey: provider.publicKey,
-      toPubkey: receiver,
-      lamports: 50000000
-    })
-  );
+      log("Signature acceptée ✔");
+      alert("Signature Phantom validée");
+    } catch (error) {
+      console.error(error);
+      log(`ERREUR SIGNATURE : ${error?.message || error}`);
+      alert("Erreur console");
+    }
+  }
 
-  tx.feePayer = provider.publicKey;
-  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+  async function sendTestSol() {
+    try {
+      const provider = await connectWallet();
+      const connection = await getConnection();
 
-  const signed = await provider.signTransaction(tx);
-  const sig = await connection.sendRawTransaction(signed.serialize());
+      log("Préparation transaction test 0.01 SOL...");
 
-  await connection.confirmTransaction(sig);
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: provider.publicKey,
+          toPubkey: provider.publicKey,
+          lamports: 10_000_000
+        })
+      );
 
-  write("Paiement validé ✔");
+      transaction.feePayer = provider.publicKey;
+      transaction.recentBlockhash = (
+        await connection.getLatestBlockhash()
+      ).blockhash;
 
-  generatePDF();
-}
+      log("Demande de signature transaction...");
+      const signed = await provider.signTransaction(transaction);
 
-// PDF
-function generatePDF(){
-  const element = document.getElementById("result");
+      log("Envoi réseau...");
+      const signature = await connection.sendRawTransaction(signed.serialize());
 
-  html2pdf()
-    .from(element)
-    .save("heliosastro.pdf");
-}
+      await connection.confirmTransaction(signature, "confirmed");
+
+      log(`Transaction test validée ✔`);
+      log(`Signature réseau : ${signature}`);
+      alert("Transaction test validée");
+    } catch (error) {
+      console.error(error);
+      log(`ERREUR TRANSACTION : ${error?.message || error}`);
+      alert("Erreur console");
+    }
+  }
+
+  async function payAccess() {
+    try {
+      const provider = await connectWallet();
+      const connection = await getConnection();
+
+      log("Préparation paiement test 0.05 SOL...");
+
+      const receiver = provider.publicKey;
+
+      const transaction = new solanaWeb3.Transaction().add(
+        solanaWeb3.SystemProgram.transfer({
+          fromPubkey: provider.publicKey,
+          toPubkey: receiver,
+          lamports: 50_000_000
+        })
+      );
+
+      transaction.feePayer = provider.publicKey;
+      transaction.recentBlockhash = (
+        await connection.getLatestBlockhash()
+      ).blockhash;
+
+      log("Demande de signature paiement...");
+      const signed = await provider.signTransaction(transaction);
+
+      log("Envoi paiement...");
+      const signature = await connection.sendRawTransaction(signed.serialize());
+
+      await connection.confirmTransaction(signature, "confirmed");
+
+      log("Paiement validé ✔");
+      log(`Signature paiement : ${signature}`);
+
+      generatePDF();
+      alert("Paiement validé + PDF généré");
+    } catch (error) {
+      console.error(error);
+      log(`ERREUR PAIEMENT : ${error?.message || error}`);
+      alert("Erreur console");
+    }
+  }
+
+  function generatePDF() {
+    const element = document.getElementById("result");
+
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: "rapport-heliosastro-chromohelios.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+      })
+      .from(element)
+      .save();
+  }
+
+  log("Initialisation terminée.");
+  setWalletInfo(null, null);
+
+  btnConnect.addEventListener("click", async () => {
+    try {
+      await connectWallet();
+      alert("Connexion Phantom validée");
+    } catch (error) {
+      console.error(error);
+      log(`ERREUR CONNEXION : ${error?.message || error}`);
+      alert("Erreur console");
+    }
+  });
+
+  btnSign.addEventListener("click", signMessage);
+  btnSend.addEventListener("click", sendTestSol);
+  btnPay.addEventListener("click", payAccess);
+  btnPdf.addEventListener("click", generatePDF);
+});
