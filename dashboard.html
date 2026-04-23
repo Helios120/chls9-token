@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHLS9 Dashboard — HeliosAstro</title>
+
+  <link rel="stylesheet" href="./dashboard.css" />
+
+  <!-- Solana Web3 (IIFE global: solanaWeb3) -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+
+  <!-- PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/chromohelios-logo.png" class="logo" />
+      <div>
+        <div class="kicker">HELIOSASTRO • MAINNET READY</div>
+        <div class="title">ChromoHelios CHLS9</div>
+      </div>
+    </div>
+
+    <div class="wallet-mini">
+      <div id="miniAddress">Non connecté</div>
+      <div id="miniSol">- SOL</div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="hero">
+      <div class="hero-left">
+        <h1>Dashboard Token</h1>
+        <p>
+          Visualisation en temps réel du wallet, du SOL et du token CHLS9.
+          Connexion Phantom, signature, transaction test et export PDF.
+        </p>
+
+        <div class="actions">
+          <button id="btnConnect" class="btn primary">Connecter Phantom</button>
+          <button id="btnRefresh" class="btn">Rafraîchir</button>
+          <button id="btnSign" class="btn">Signer</button>
+          <button id="btnSend" class="btn">Envoyer 0.01 SOL</button>
+          <button id="btnPdf" class="btn secondary">Exporter PDF</button>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <img src="./assets/chromohelios-logo.png" class="hero-logo" />
+      </div>
+    </section>
+
+    <section class="grid">
+
+      <div class="card">
+        <h2>Wallet</h2>
+        <div class="kv">
+          <span>Adresse</span>
+          <strong id="walletAddress">-</strong>
+        </div>
+        <div class="kv">
+          <span>SOL</span>
+          <strong id="walletSol">-</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>CHLS9</h2>
+        <div class="kv">
+          <span>Mint</span>
+          <strong id="mintAddress">À renseigner</strong>
+        </div>
+        <div class="kv">
+          <span>Solde</span>
+          <strong id="chlsBalance">0</strong>
+        </div>
+      </div>
+
+      <div class="card wide">
+        <h2>Tokens détectés</h2>
+        <div id="tokensList" class="tokens-list">-</div>
+      </div>
+
+      <div class="card wide">
+        <h2>Logs</h2>
+        <pre id="log" class="log"></pre>
+      </div>
+
+    </section>
+
+    <section id="report" class="report">
+      <h2>Rapport Client HeliosAstro</h2>
+      <p>Export PDF de validation Web3 + état du wallet.</p>
+    </section>
+
+  </main>
+
+  <script src="./dashboard.js"></script>
+</body>
+</html>
