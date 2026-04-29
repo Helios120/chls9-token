@@ -1,205 +1,439 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ChromoHelios CHLS9 — Dashboard</title>
-
-  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <link rel="stylesheet" href="./style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChromoHelios CHLS9 — Token Vivant Helios Astro</title>
+<meta name="description" content="ChromoHelios CHLS9 — token vivant connecté à Helios Astro, wallet Phantom, flux photoniques et laboratoire intelligent.">
+<style>
+:root{
+  --bg:#03050b;--gold:#ffc94f;--blue:#277dff;--cyan:#32ecff;--pink:#ff3bbd;
+  --text:#f8fbff;--muted:#9ba9b9;--panel:rgba(7,14,28,.78);--line:rgba(255,201,82,.22);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:radial-gradient(circle at 70% 10%,rgba(39,125,255,.2),transparent 32%),
+  radial-gradient(circle at 20% 20%,rgba(255,201,79,.16),transparent 34%),
+  linear-gradient(180deg,#02040a,#04070f 42%,#02040a);
+}
+a{text-decoration:none;color:inherit}
+.wrap{width:min(1180px,calc(100% - 34px));margin:auto}
+header{position:sticky;top:0;z-index:10;background:rgba(2,5,12,.78);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{min-height:76px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:50px;height:50px;border-radius:50%;object-fit:cover;border:1px solid var(--gold);box-shadow:0 0 28px rgba(255,201,79,.35)}
+.brand strong{display:block;color:var(--gold);letter-spacing:.12em}
+.brand span{font-size:11px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
+.nav-links{display:flex;gap:20px;color:#dbe8f5;font-size:14px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:999px;
+  border:1px solid rgba(255,201,79,.38);background:linear-gradient(135deg,rgba(255,201,79,.22),rgba(255,159,47,.08));
+  color:#fff7d8;font-weight:800;cursor:pointer
+}
+.btn.blue{border-color:rgba(50,236,255,.36);background:linear-gradient(135deg,rgba(39,125,255,.28),rgba(50,236,255,.08))}
+.hero{padding:78px 0 45px}
+.grid{display:grid;grid-template-columns:1.04fr .96fr;gap:34px;align-items:center}
+.badge{display:inline-flex;gap:9px;padding:8px 12px;border:1px solid rgba(255,201,79,.28);border-radius:999px;color:#ffe7a2;background:rgba(255,201,79,.07);font-size:13px;font-weight:800}
+.dot{width:8px;height:8px;border-radius:50%;background:#41ffb3;box-shadow:0 0 18px #41ffb3}
+h1{margin:22px 0 18px;font-size:clamp(42px,6vw,88px);line-height:.9;letter-spacing:-.05em}
+.grad{background:linear-gradient(90deg,#fff,#ffe08b,#ffb23e,#5adfff,#fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:#c8d5e4;line-height:1.65}
+.actions{display:flex;flex-wrap:wrap;gap:13px;margin:28px 0}
+.mint-box{display:grid;grid-template-columns:1fr auto;gap:10px;max-width:760px;padding:12px;border-radius:18px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.28)}
+.mint-box code{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px}
+.copy-btn{border:0;border-radius:12px;padding:10px 13px;background:var(--gold);font-weight:900;cursor:pointer}
+.logo-card{min-height:530px;border-radius:34px;padding:20px;border:1px solid rgba(255,201,79,.22);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:0 24px 80px rgba(0,0,0,.45);overflow:hidden}
+.logo-stage{height:100%;min-height:490px;display:grid;place-items:center;border-radius:26px;background:radial-gradient(circle,rgba(255,201,79,.16),rgba(0,0,0,.82) 62%);border:1px solid rgba(255,255,255,.1)}
+.logo-stage img{width:min(94%,520px);filter:drop-shadow(0 0 34px rgba(255,201,79,.38));animation:breathe 4.5s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.026)}}
+section{padding:65px 0}
+.head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}
+.eyebrow{color:var(--gold);font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:12px}
+h2{margin:10px 0 0;font-size:clamp(30px,4vw,56px);line-height:1;letter-spacing:-.04em}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card,.panel{
+  padding:24px;border-radius:24px;border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+}
+.card h3{margin:0 0 10px;font-size:22px}.card p{margin:0;color:#b9c7d7}
+.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.token-row{display:grid;grid-template-columns:160px 1fr;gap:14px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.token-row span{color:var(--muted)}.token-row code{overflow-wrap:anywhere}
+.wallet-box{border:1px solid rgba(50,236,255,.24);background:rgba(50,236,255,.055)}
+.state{font-size:28px;color:var(--gold);font-weight:900}
+.lab-shell{border-radius:32px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(180deg,rgba(4,10,22,.92),rgba(1,4,10,.86));overflow:hidden}
+.lab-top{display:flex;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.lab-view{position:relative;height:630px}
+#chlsLab{position:absolute;inset:0;width:100%;height:100%}
+.lab-controls{position:absolute;left:16px;top:16px;width:245px;padding:14px;border-radius:18px;border:1px solid rgba(255,255,255,.12);background:rgba(3,8,18,.66);backdrop-filter:blur(14px)}
+.lab-controls label{display:block;margin-top:12px;color:#c9d9e6;font-size:12px}
+.lab-controls input{width:100%;accent-color:var(--gold)}
+.warning{border-radius:24px;border:1px solid rgba(255,201,79,.2);background:rgba(255,201,79,.06);padding:20px;color:#ffe8b0}
+footer{padding:34px 0;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:13px}
+@media(max-width:980px){.nav-links{display:none}.grid,.token-grid,.cards{grid-template-columns:1fr}.logo-stage{min-height:360px}.head{display:block}.lab-view{height:560px}.lab-controls{position:relative;width:auto;margin:14px;left:auto;top:auto}#chlsLab{top:150px;height:calc(100% - 150px)}}
+@media(max-width:560px){.mint-box,.token-row{grid-template-columns:1fr}.wrap{width:min(100% - 24px,1180px)}}
+</style>
 </head>
 
 <body>
-
-<!-- BACKGROUND -->
-<div class="bg-orb orb-1"></div>
-<div class="bg-orb orb-2"></div>
-
-<!-- HEADER -->
-<header class="topbar">
-  <div class="brand">
-    <img src="./assets/chromohelios-logo.png" class="brand-logo"/>
-    <div>
-      <div class="brand-kicker">HELIOSASTRO • SOLANA MAINNET</div>
-      <div class="brand-title">ChromoHelios CHLS9</div>
-    </div>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <img src="assets/chls9-logo.png" alt="Logo CHLS9">
+      <div><strong>CHLS9</strong><span>ChromoHelios</span></div>
+    </a>
+    <nav class="nav-links">
+      <a href="#vision">Vision</a>
+      <a href="#token">Token</a>
+      <a href="#wallet">Wallet</a>
+      <a href="#lab">Laboratoire</a>
+    </nav>
+    <a class="btn" href="#wallet">Connecter</a>
   </div>
-
-  <nav class="nav">
-    <a href="#wallet">Wallet</a>
-    <a href="#market">Marché</a>
-    <a href="./buy-sell.html">Buy/Sell</a>
-    <a href="./investisseurs.html">Investisseurs</a>
-  </nav>
 </header>
 
-<!-- MAIN -->
-<main class="container">
-
-<!-- HERO -->
+<main id="top">
 <section class="hero">
-  <h1>ChromoHelios CHLS9</h1>
-  <p>
-    Infrastructure Web3 HeliosAstro connectée à Solana.
-    Accès direct au wallet, suivi du token, et interaction on-chain.
-  </p>
-
-  <button id="btnConnect" class="btn-primary">
-    Connecter Phantom
-  </button>
-</section>
-
-<!-- WALLET -->
-<section id="wallet" class="panel">
-  <h2>Wallet</h2>
-
-  <div class="grid">
-    <div class="card">
-      <span>Adresse</span>
-      <strong id="walletAddress">-</strong>
-      <a id="walletExplorerLink" target="_blank">Voir Explorer</a>
+  <div class="wrap grid">
+    <div>
+      <div class="badge"><span class="dot"></span> Solana token · Helios Astro ecosystem</div>
+      <h1><span class="grad">CHLS9</span><br>Token vivant</h1>
+      <p>
+        ChromoHelios CHLS9 fusionne token Solana, wallet Phantom, identité Helios Astro,
+        laboratoire photonique et logique de token vivant.
+      </p>
+      <div class="actions">
+        <a class="btn" href="#wallet">Activer le token vivant</a>
+        <a class="btn blue" href="#lab">Ouvrir le laboratoire</a>
+      </div>
+      <div class="mint-box">
+        <code id="mintText">EffrWV33wCbHNXbTJ7T7H5AsfxuXjB7wACHgM6JAGYd6</code>
+        <button class="copy-btn" onclick="copyMint()">Copier</button>
+      </div>
     </div>
 
-    <div class="card">
-      <span>SOL</span>
-      <strong id="walletBalance">-</strong>
+    <div class="logo-card">
+      <div class="logo-stage">
+        <img src="assets/chls9-logo.png" alt="CHLS9 ChromoHelios">
+      </div>
     </div>
-
-    <div class="card">
-      <span>CHLS9</span>
-      <strong id="chlsBalance">0</strong>
-    </div>
-
-    <div class="card">
-      <span>Réseau</span>
-      <strong id="networkLabel">mainnet</strong>
-    </div>
-  </div>
-
-  <div class="actions">
-    <button id="btnRefresh">Refresh</button>
-    <button id="btnSign">Signer</button>
-    <button id="btnSend">Tx test</button>
-  </div>
-
-</section>
-
-<!-- TOKEN -->
-<section class="panel">
-  <h2>Token CHLS9</h2>
-
-  <div class="grid">
-
-    <div class="card">
-      <span>Nom</span>
-      <strong id="tokenName">ChromoHelios</strong>
-    </div>
-
-    <div class="card">
-      <span>Symbole</span>
-      <strong id="tokenSymbol">CHLS9</strong>
-    </div>
-
-    <div class="card">
-      <span>Statut</span>
-      <strong id="tokenVerified">Mainnet actif</strong>
-    </div>
-
-    <div class="card">
-      <span>Mint</span>
-      <strong id="mintShort">...</strong>
-      <button id="copyMintBtn">Copier</button>
-    </div>
-
-  </div>
-
-  <div class="mint-full">
-    <code id="mintAddress"></code>
-  </div>
-
-  <div class="links">
-    <a id="mintExplorerBtn" target="_blank">Explorer</a>
-    <a href="https://raydium.io/swap/" target="_blank">Raydium Swap</a>
-  </div>
-
-</section>
-
-<!-- MARKET -->
-<section id="market" class="panel">
-  <h2>Marché</h2>
-
-  <div class="grid">
-
-    <div class="card">
-      <span>Prix USD</span>
-      <strong id="priceUsd">$ -</strong>
-    </div>
-
-    <div class="card">
-      <span>Nom API</span>
-      <strong id="tokenName">ChromoHelios</strong>
-    </div>
-
-    <div class="card">
-      <span>Symbole API</span>
-      <strong id="tokenSymbol">CHLS9</strong>
-    </div>
-
-    <div class="card">
-      <span>Statut</span>
-      <strong id="tokenVerified">Actif</strong>
-    </div>
-
   </div>
 </section>
 
-<!-- TOKENS LIST -->
-<section class="panel">
-  <h2>Tokens détectés</h2>
-  <pre id="tokensList">-</pre>
-</section>
-
-<!-- LOG -->
-<section class="panel">
-  <h2>Console</h2>
-  <pre id="log"></pre>
-</section>
-
-<!-- REPORT -->
-<section id="report" class="panel">
-  <h2>Rapport investisseur</h2>
-
-  <div class="grid">
-    <div class="card">
-      <span>Wallet</span>
-      <strong id="reportWallet">-</strong>
+<section id="vision">
+  <div class="wrap">
+    <div class="head">
+      <div><div class="eyebrow">Vision</div><h2>Un token vivant, pas un ticker vide.</h2></div>
+      <p>Le wallet active l’expérience. Le solde CHLS9 influence le laboratoire : halo, particules, réseau et intensité.</p>
     </div>
-
-    <div class="card">
-      <span>SOL</span>
-      <strong id="reportSol">-</strong>
-    </div>
-
-    <div class="card">
-      <span>CHLS9</span>
-      <strong id="reportChls">-</strong>
-    </div>
-
-    <div class="card">
-      <span>Prix</span>
-      <strong id="reportPrice">-</strong>
+    <div class="cards">
+      <div class="card"><h3>Identité</h3><p>CHLS9 porte l’univers Helios Astro : lumière, géométrie sacrée, flux et intelligence visuelle.</p></div>
+      <div class="card"><h3>Token vivant</h3><p>Le token devient un déclencheur d’expérience. Plus le wallet détient CHLS9, plus le système s’anime.</p></div>
+      <div class="card"><h3>Laboratoire</h3><p>Le canvas traduit visuellement le passage particules → flux → structure → conscience numérique.</p></div>
     </div>
   </div>
-
-  <button id="btnPdf">Exporter PDF</button>
 </section>
 
+<section id="token">
+  <div class="wrap token-grid">
+    <div>
+      <div class="eyebrow">Token profile</div>
+      <h2>CHLS9 sur Solana</h2>
+      <p>Mint officiel utilisé par le site pour lire le solde du wallet connecté.</p>
+    </div>
+    <div class="panel">
+      <div class="token-row"><span>Nom</span><strong>ChromoHelios</strong></div>
+      <div class="token-row"><span>Symbole</span><strong>CHLS9</strong></div>
+      <div class="token-row"><span>Réseau</span><strong>Solana Mainnet</strong></div>
+      <div class="token-row"><span>Mint</span><code id="mintDisplay">EffrWV33wCbHNXbTJ7T7H5AsfxuXjB7wACHgM6JAGYd6</code></div>
+      <div class="token-row"><span>État</span><strong>Token vivant connecté au wallet</strong></div>
+    </div>
+  </div>
+</section>
+
+<section id="wallet">
+  <div class="wrap token-grid">
+    <div>
+      <div class="eyebrow">Wallet intelligence</div>
+      <h2>Activation du token vivant</h2>
+      <p>Connecte Phantom. Le site lit ton solde CHLS9 et adapte le laboratoire.</p>
+      <div class="actions">
+        <button class="btn blue" id="connectBtn">Connecter Phantom</button>
+        <button class="btn" id="refreshBtn">Rafraîchir CHLS9</button>
+      </div>
+    </div>
+
+    <div class="panel wallet-box">
+      <div class="token-row"><span>Wallet</span><code id="walletAddress">Non connecté</code></div>
+      <div class="token-row"><span>Solde CHLS9</span><strong id="tokenBalance">--</strong></div>
+      <div class="token-row"><span>État vivant</span><strong class="state" id="lifeState">Dormant</strong></div>
+      <div class="token-row"><span>Score</span><strong id="lifeScore">0 / 100</strong></div>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:18px">
+    <div class="warning">
+      CHLS9 reste un actif crypto risqué. Le système ci-dessus affiche une expérience visuelle liée au wallet ; il ne promet aucun rendement.
+    </div>
+  </div>
+</section>
+
+<section id="lab">
+  <div class="wrap">
+    <div class="head">
+      <div><div class="eyebrow">Integrated software</div><h2>Laboratoire ChromoHelios vivant</h2></div>
+      <p>La lumière du laboratoire évolue selon l’état CHLS9 du wallet connecté.</p>
+    </div>
+
+    <div class="lab-shell">
+      <div class="lab-top">
+        <strong>CHLS9 Photon Network</strong>
+        <div><span class="dot"></span> <span id="labStatus">Mode Dormant</span></div>
+      </div>
+      <div class="lab-view">
+        <canvas id="chlsLab"></canvas>
+        <div class="lab-controls">
+          <h3>Paramètres</h3>
+          <label>Flux photons</label><input id="flowRange" type="range" min="250" max="1800" value="850" step="50">
+          <label>Vitesse</label><input id="speedRange" type="range" min="20" max="180" value="80">
+          <label>Intensité réseau</label><input id="netRange" type="range" min="20" max="100" value="58">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 
-<!-- SCRIPT -->
-<script src="./index.js"></script>
+<footer>
+  <div class="wrap">© CHLS9 ChromoHelios — Helios Astro ecosystem · Mint: EffrWV33wCbHNXbTJ7T7H5AsfxuXjB7wACHgM6JAGYd6</div>
+</footer>
 
+<script>
+const CHLS9_MINT = "EffrWV33wCbHNXbTJ7T7H5AsfxuXjB7wACHgM6JAGYd6";
+let connectedWallet = null;
+let lifeMultiplier = 0.35;
+
+function copyMint(){
+  navigator.clipboard.writeText(CHLS9_MINT);
+  const btn=document.querySelector(".copy-btn");
+  btn.textContent="Copié";
+  setTimeout(()=>btn.textContent="Copier",1200);
+}
+
+function shortAddress(a){
+  return a ? a.slice(0,6)+"..."+a.slice(-6) : "Non connecté";
+}
+
+function computeLife(balance){
+  let score = Math.min(100, Math.round(
+    balance >= 100000 ? 100 :
+    balance >= 50000 ? 85 :
+    balance >= 10000 ? 68 :
+    balance >= 1000 ? 42 :
+    balance > 0 ? 22 : 0
+  ));
+
+  let state="Dormant";
+  if(score>=20) state="Activé";
+  if(score>=40) state="Vibrant";
+  if(score>=65) state="Évolutif";
+  if(score>=85) state="Helios";
+  if(score>=100) state="Solaire";
+
+  return {score,state,multiplier:0.35 + score/100*1.35};
+}
+
+async function connectWallet(){
+  if(!window.solana || !window.solana.isPhantom){
+    alert("Phantom non détecté");
+    return;
+  }
+  try{
+    const resp = await window.solana.connect();
+    connectedWallet = resp.publicKey.toString();
+    document.getElementById("walletAddress").textContent = shortAddress(connectedWallet);
+    await refreshBalance();
+  }catch(e){
+    console.error(e);
+    alert("Connexion refusée");
+  }
+}
+
+async function getTokenBalance(owner, mint){
+  const body = {
+    jsonrpc:"2.0",
+    id:1,
+    method:"getParsedTokenAccountsByOwner",
+    params:[
+      owner,
+      {mint: mint},
+      {encoding:"jsonParsed"}
+    ]
+  };
+
+  const res = await fetch("https://api.mainnet-beta.solana.com", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(body)
+  });
+
+  const data = await res.json();
+  const accounts = data?.result?.value || [];
+  if(!accounts.length) return 0;
+
+  return accounts.reduce((sum, acc)=>{
+    const ui = acc.account.data.parsed.info.tokenAmount.uiAmount || 0;
+    return sum + ui;
+  },0);
+}
+
+async function refreshBalance(){
+  if(!connectedWallet){
+    alert("Connecte Phantom d’abord");
+    return;
+  }
+
+  document.getElementById("tokenBalance").textContent = "Lecture...";
+  const balance = await getTokenBalance(connectedWallet, CHLS9_MINT);
+  const life = computeLife(balance);
+
+  document.getElementById("tokenBalance").textContent = balance.toLocaleString("fr-FR")+" CHLS9";
+  document.getElementById("lifeState").textContent = life.state;
+  document.getElementById("lifeScore").textContent = life.score+" / 100";
+  document.getElementById("labStatus").textContent = "Mode "+life.state;
+
+  lifeMultiplier = life.multiplier;
+  flowRange.value = Math.min(1800, 500 + Math.round(life.score*12));
+  netRange.value = Math.min(100, 35 + Math.round(life.score*.65));
+  speedRange.value = Math.min(180, 55 + Math.round(life.score*.9));
+  buildLab();
+}
+
+document.getElementById("connectBtn").addEventListener("click", connectWallet);
+document.getElementById("refreshBtn").addEventListener("click", refreshBalance);
+
+/* LAB */
+const labCanvas=document.getElementById("chlsLab");
+const ctx=labCanvas.getContext("2d");
+const flowRange=document.getElementById("flowRange");
+const speedRange=document.getElementById("speedRange");
+const netRange=document.getElementById("netRange");
+
+let W=0,H=0,CX=0,CY=0,DPR=1,t=0,particles=[],nodes=[];
+
+function resizeLab(){
+  const box=labCanvas.parentElement.getBoundingClientRect();
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=box.width;H=box.height;
+  labCanvas.width=Math.floor(W*DPR);labCanvas.height=Math.floor(H*DPR);
+  labCanvas.style.width=W+"px";labCanvas.style.height=H+"px";
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CX=W*.56;CY=H*.52;
+  buildLab();
+}
+
+function buildLab(){
+  particles=[];nodes=[];
+  const count=Number(flowRange.value);
+  for(let i=0;i<count;i++){
+    particles.push({arm:Math.floor(Math.random()*18),phase:Math.random(),speed:.00008+Math.random()*.00022,size:.45+Math.random()*1.15,hueShift:Math.random()*46-23});
+  }
+  const rings=4,maxR=Math.min(W,H)*.39;
+  for(let r=1;r<=rings;r++){
+    const n=8+r*4;
+    for(let i=0;i<n;i++){
+      const a=i/n*Math.PI*2+r*.23,rr=maxR*r/rings;
+      nodes.push({x:CX+Math.cos(a)*rr,y:CY+Math.sin(a)*rr,a,r:rr,ring:r,pulse:Math.random()*Math.PI*2,hue:(a*180/Math.PI+80+r*32)%360});
+    }
+  }
+}
+
+function color(h,a,l=58){return`hsla(${h},94%,${l}%,${a})`}
+
+function glow(x,y,r,c,a){
+  const g=ctx.createRadialGradient(x,y,0,x,y,r);
+  g.addColorStop(0,`rgba(${c[0]},${c[1]},${c[2]},${a})`);
+  g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},0)`);
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+}
+
+function drawStar(cx,cy,r,points,hue){
+  ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation="screen";
+  for(let layer=0;layer<3;layer++){
+    ctx.beginPath();
+    const r1=r*(1-layer*.18),r2=r1*.43;
+    for(let i=0;i<points*2;i++){
+      const a=-Math.PI/2+i*Math.PI/points+t*.00008*(layer+1);
+      const rr=i%2===0?r1:r2,x=Math.cos(a)*rr,y=Math.sin(a)*rr;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle=layer===0?`rgba(255,201,79,${.35*lifeMultiplier})`:color(hue+layer*40,.18*lifeMultiplier,62);
+    ctx.lineWidth=1.4-layer*.25;ctx.shadowBlur=18;ctx.shadowColor=color(hue,.65,62);ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawLab(now){
+  t=now;
+  const speed=Number(speedRange.value)/100;
+  const net=Number(netRange.value)/100;
+
+  ctx.fillStyle="rgba(1,4,11,.20)";
+  ctx.fillRect(0,0,W,H);
+
+  glow(CX,CY,Math.min(W,H)*.5,[255,201,79],.035*lifeMultiplier);
+  glow(CX,CY,Math.min(W,H)*.38,[39,125,255],.045*lifeMultiplier);
+
+  ctx.save();ctx.globalCompositeOperation="screen";
+  for(let i=0;i<nodes.length;i++){
+    const a=nodes[i];
+    for(let j=i+1;j<nodes.length;j++){
+      const b=nodes[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<Math.min(W,H)*(.145+net*.07)&&Math.abs(a.ring-b.ring)<=1){
+        ctx.beginPath();ctx.moveTo(a.x,a.y);
+        ctx.quadraticCurveTo((a.x+b.x)/2,(a.y+b.y)/2,b.x,b.y);
+        ctx.strokeStyle=color((a.hue+b.hue)/2,.10*net*lifeMultiplier,60);
+        ctx.lineWidth=.55+net*.55;ctx.stroke();
+      }
+    }
+  }
+  ctx.restore();
+
+  const arms=18,max=Math.min(W,H)*.32;
+  for(const p of particles){
+    p.phase+=p.speed*speed*lifeMultiplier;
+    if(p.phase>1)p.phase-=1;
+    const q=p.phase,a=p.arm/18*Math.PI*2+q*3.12+t*.00018*speed;
+    const r=14+q*max,x=CX+Math.cos(a)*r,y=CY+Math.sin(a)*r,h=(a*180/Math.PI+55+p.hueShift)%360;
+    ctx.save();ctx.globalCompositeOperation="screen";
+    ctx.fillStyle=color(h,.25*lifeMultiplier,62);
+    ctx.shadowBlur=5;ctx.shadowColor=color(h,.7,64);
+    ctx.beginPath();ctx.arc(x,y,p.size*lifeMultiplier,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+
+  for(const n of nodes){
+    const pulse=.75+Math.sin(t*.002+n.pulse)*.18;
+    ctx.save();ctx.globalCompositeOperation="screen";
+    ctx.fillStyle=color(n.hue,.32*lifeMultiplier,58);
+    ctx.shadowBlur=12;ctx.shadowColor=color(n.hue,.55,62);
+    ctx.beginPath();ctx.arc(n.x,n.y,(4.5+n.ring*.7)*pulse*lifeMultiplier,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+
+  drawStar(CX,CY,Math.min(W,H)*.19,9,44);
+  glow(CX,CY,44,[255,210,73],.38*lifeMultiplier);
+  glow(CX,CY,26,[39,125,255],.26*lifeMultiplier);
+
+  requestAnimationFrame(drawLab);
+}
+
+flowRange.addEventListener("input",buildLab);
+netRange.addEventListener("input",buildLab);
+window.addEventListener("resize",resizeLab);
+resizeLab();
+requestAnimationFrame(drawLab);
+</script>
 </body>
 </html>
